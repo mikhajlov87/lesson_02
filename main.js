@@ -1,92 +1,192 @@
-    //Задача I:
+// ЗАДАНИЕ
 
-/*
-    2) есть 2 перменные;
-    var a = 10;
-    var b = 20;
-    поменять значения переменных местами;
-    с использованием третьей переменной (и без :) - опционально)
-*/
-
-    //Решение 1:
-function reverseVariables() {
-  // без использования третей переменной
-  var a = 10,
-      b = 20;
-
-  a = [a, b];
-  b = a[0];
-  a = a[1];
-  console.log(a, b);
-}
-
-    //Решение 2:
-function reverseWithAnotherVar() {
-  // с использованием третьей переменной
-  var a1 = 10,
-      b1 = 20,
-      c;
-
-  c = 10;
-  a1 = b1;
-  b1 = c;
-  c = null;
-  console.log(a1, b1);
-}
-
-//    Задача II
-
-/*
-    Создать массив на 30 элементов,
-    все элементы которого будут являться
-    случайными числами в диапазоне от 0 до 100;
-*/
+//    Создать двумерный массив разменостью 10 на 10 элементов
+//    Заполнить массив случайными числами, используя функцию rand (см. ниже)
+//
+//    function rand(startNum, endNum) {
+//      return Math.floor(startNum + Math.random() * ((endNum + 1) - startNum));
+//    }
+//
+//    Получить результирующий массив, состоящий из элементов, лежащих на гранях матрицы,
+//    размером 10 на 10 элементов. Либо «обойти массив по периметру».
+//    Обходить массив по часовой стрелке от точки 0-0
 
 //    Решение:
-function createRandomNumber(min, max) {
-  var random = min - 0.5 + Math.random() * (max - min + 1);
-  random =  Math.round(random);
-  return random;
+
+function rand(min, max) {
+  return Math.abs(Math.round(min - 0.5 + Math.random() * (max - min + 1)));
 }
 
-function createArrRandNum() {
-  var arr = new Array(30),
-      len = arr.length,
-      num,
-      i;
+function createMultidimensionalArray(arrSize, minNumber, maxNumber) {
+  var arr = [],
+    arrSize = arrSize || 10,
+    minNumber = minNumber || 0,
+    maxNumber = maxNumber || 100,
+    i,
+    j;
 
-  for (i=0; i<len; i++){
-    num = createRandomNumber(0, 100);
-    arr.splice(i, 1, num);
+  for (i = 0; i < arrSize; i++) {
+    arr[i] = [];
+
+    for (j = 0; j < arrSize; j++) {
+      arr[i][j] = rand(minNumber, maxNumber);
+    }
   }
 
   return arr;
 }
 
-// Задача III
+function createArr(reverse) {
+  var reverse = reverse || undefined,
+    arr = createMultidimensionalArray(),
+    FIRST_ELEMENT = 0,
+    len = arr.length,
+    diagonal = [],
+    result = [],
+    bottom = [],
+    right = [],
+    left = [],
+    top = [],
+    i;
 
-/*
-    Насписать скрипт, повторяющий принцип работы метода indexOf
-    (в массиве из дз3 ищем, например, число 77, если находим,
-    выводится его индекс. если не находим - выводится -1)
-    var index = -1;
-    ищем по массиву, если находим, то перезаписываем переменную index
-    остaнавливаем цикл
-    выводим значение переменной index
-*/
+  for (i = 0; i < len; i++) {
+    var ARR_INNER_LEN = arr[i].length,
+      SECOND_ELEMENT = FIRST_ELEMENT + 1,
+      LAST_ELEMENT = ARR_INNER_LEN - 1;
 
-// Решение:
-function findIndex(arr, num) {
-  var index = -1,
-      len = arr.length,
-      i;
+    if (reverse === 'reverse') {
+      top = arr[FIRST_ELEMENT].slice( SECOND_ELEMENT, LAST_ELEMENT );
+      left.push( arr[i][FIRST_ELEMENT] );
+      right.push( arr[i][LAST_ELEMENT] );
+      bottom = arr[LAST_ELEMENT].slice( SECOND_ELEMENT, LAST_ELEMENT );
 
-  for (i=0; i<len; i++) {
-    if (num === arr[i]) {
-      index = i;
-      break;
+    } else if (reverse === 'clockwise') {
+      top = arr[FIRST_ELEMENT].slice();
+        if (i > FIRST_ELEMENT && i < LAST_ELEMENT) {
+          left.push(arr[i][FIRST_ELEMENT]);
+          right.push(arr[i][LAST_ELEMENT]);
+        }
+      bottom = arr[LAST_ELEMENT].slice();
+
+    } else if (reverse === 'triangle') {
+      top = arr[FIRST_ELEMENT].slice();
+      if (i > FIRST_ELEMENT && i < LAST_ELEMENT) {
+        right.push( arr[i][LAST_ELEMENT] );
+        diagonal.push( arr[i][i] );
+      } else if (i === LAST_ELEMENT) {
+        right.push( arr[i][LAST_ELEMENT] );
+      }
+    } else if (reverse === 'triangle-reverse') {
+      if (i === FIRST_ELEMENT) {
+        diagonal.push(arr[i][FIRST_ELEMENT]);
+      } else if (i > FIRST_ELEMENT && i < LAST_ELEMENT) {
+        left.push( arr[i][FIRST_ELEMENT] );
+        diagonal.push( arr[i][i] );
+      } else {
+        bottom = arr[i].slice();
+      }
     }
   }
 
-  console.log(index);
+  console.table(arr);
+
+  switch (reverse) {
+    case 'reverse':
+      result = result.concat( left, bottom, right.reverse(), top.reverse() );
+      console.log('top = ' + top);
+      console.log('left = ' + left);
+      console.log('bottom = ' + bottom);
+      console.log('right = ' + right);
+      break;
+
+    case 'clockwise':
+      result = result.concat( top, right, bottom.reverse(), left.reverse() );
+      console.log('top = ' + top);
+      console.log('right = ' + right);
+      console.log('bottom = ' + bottom);
+      console.log('left = ' + left);
+      break;
+
+    case 'triangle':
+      result = result.concat( top, right, diagonal.reverse() );
+      console.log('top = ' + top);
+      console.log('right = ' + right);
+      console.log('diagonal = ' + diagonal);
+      break;
+
+    case 'triangle-reverse':
+      result = result.concat( bottom, diagonal.reverse(), left );
+      console.log('bottom = ' + bottom);
+      console.log('diagonal = ' + diagonal);
+      console.log('left = ' + left);
+      break;
+
+    default:
+      createSpiral(arr);
+  }
+
+  console.log(result);
 }
+
+var result = [];
+
+function createSpiral(arr, count) {
+  var newArr = arr.slice(),
+      len = newArr.length,
+      LAST_ELEMENT = len - 1,
+      FIRST_ELEMENT = 0,
+      bottom = [],
+      right = [],
+      left = [],
+      top = [],
+      i;
+
+  var n = len / 2,
+      count = 0;
+
+  if (count < n) {
+    for (i = 0; i < len; i++) {
+      if (i === FIRST_ELEMENT) {
+        top = newArr[i].slice();
+      } else if (i > FIRST_ELEMENT && i < LAST_ELEMENT) {
+        left.push( newArr[i].shift() );
+        right.push( newArr[i].pop() );
+      } else {
+        newArr.shift();
+        bottom = newArr.pop();
+      }
+    }
+
+    result = result.concat(top, right, bottom.reverse(), left.reverse() );
+
+    return createSpiral(newArr, count++);
+
+  } else {
+    return result;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
