@@ -1,192 +1,119 @@
-// ЗАДАНИЕ
+        /* ДЗ 1 */
+/*
+     Написать электронные часы,
+     которые в консоли выводят раз в секунду
+     время в формате 23:59
+     3:4 - плохо
+     03:04 - хорошо
+     подсказка - очищать консоль можно командой console.clear()
+ */
 
-//    Создать двумерный массив разменостью 10 на 10 элементов
-//    Заполнить массив случайными числами, используя функцию rand (см. ниже)
-//
-//    function rand(startNum, endNum) {
-//      return Math.floor(startNum + Math.random() * ((endNum + 1) - startNum));
-//    }
-//
-//    Получить результирующий массив, состоящий из элементов, лежащих на гранях матрицы,
-//    размером 10 на 10 элементов. Либо «обойти массив по периметру».
-//    Обходить массив по часовой стрелке от точки 0-0
+(function () {
+    var hours = '23',
+        minutes = '59',
+        seconds = '57',
+        UNIT_OF_TIME = 60,
+        METRIC_SYSTEM = 10,
+        ONE_DAY = 24;
 
-//    Решение:
+    setInterval(function(){
+        seconds++;
+        if (seconds < METRIC_SYSTEM) {
+            seconds = '0' + seconds;
+        } else if (seconds === UNIT_OF_TIME) {
+            seconds = '00';
+            minutes++;
 
-function rand(min, max) {
-  return Math.abs(Math.round(min - 0.5 + Math.random() * (max - min + 1)));
-}
+            if (minutes < METRIC_SYSTEM) {
+                minutes = '0' + minutes;
+            } else if (minutes === UNIT_OF_TIME) {
+                minutes = '00';
+                hours++;
 
-function createMultidimensionalArray(arrSize, minNumber, maxNumber) {
-  var arr = [],
-    arrSize = arrSize || 10,
-    minNumber = minNumber || 0,
-    maxNumber = maxNumber || 100,
-    i,
-    j;
-
-  for (i = 0; i < arrSize; i++) {
-    arr[i] = [];
-
-    for (j = 0; j < arrSize; j++) {
-      arr[i][j] = rand(minNumber, maxNumber);
-    }
-  }
-
-  return arr;
-}
-
-function createArr(reverse) {
-  var reverse = reverse || undefined,
-    arr = createMultidimensionalArray(),
-    FIRST_ELEMENT = 0,
-    len = arr.length,
-    diagonal = [],
-    result = [],
-    bottom = [],
-    right = [],
-    left = [],
-    top = [],
-    i;
-
-  for (i = 0; i < len; i++) {
-    var ARR_INNER_LEN = arr[i].length,
-      SECOND_ELEMENT = FIRST_ELEMENT + 1,
-      LAST_ELEMENT = ARR_INNER_LEN - 1;
-
-    if (reverse === 'reverse') {
-      top = arr[FIRST_ELEMENT].slice( SECOND_ELEMENT, LAST_ELEMENT );
-      left.push( arr[i][FIRST_ELEMENT] );
-      right.push( arr[i][LAST_ELEMENT] );
-      bottom = arr[LAST_ELEMENT].slice( SECOND_ELEMENT, LAST_ELEMENT );
-
-    } else if (reverse === 'clockwise') {
-      top = arr[FIRST_ELEMENT].slice();
-        if (i > FIRST_ELEMENT && i < LAST_ELEMENT) {
-          left.push(arr[i][FIRST_ELEMENT]);
-          right.push(arr[i][LAST_ELEMENT]);
+                if (hours === ONE_DAY) {
+                    hours = '00'
+                }
+            }
         }
-      bottom = arr[LAST_ELEMENT].slice();
 
-    } else if (reverse === 'triangle') {
-      top = arr[FIRST_ELEMENT].slice();
-      if (i > FIRST_ELEMENT && i < LAST_ELEMENT) {
-        right.push( arr[i][LAST_ELEMENT] );
-        diagonal.push( arr[i][i] );
-      } else if (i === LAST_ELEMENT) {
-        right.push( arr[i][LAST_ELEMENT] );
-      }
-    } else if (reverse === 'triangle-reverse') {
-      if (i === FIRST_ELEMENT) {
-        diagonal.push(arr[i][FIRST_ELEMENT]);
-      } else if (i > FIRST_ELEMENT && i < LAST_ELEMENT) {
-        left.push( arr[i][FIRST_ELEMENT] );
-        diagonal.push( arr[i][i] );
-      } else {
-        bottom = arr[i].slice();
-      }
+        console.clear();
+        console.log(hours + ' : ' + minutes + ' : ' + seconds);
+    }, 1000);
+})();
+
+
+(function () {
+    var date;
+    var options = {
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric'
+        };
+
+    setInterval(function () {
+        date = new Date();
+        console.clear();
+        console.log(date.toLocaleString('ru', options));
+    }, 1000);
+})();
+
+    /* ДЗ2*/
+/*
+ Написать программу-бомбу, которая будет отсчитывать 10 секунд в обратном порядке,
+ отображая, оставшееся время в консоли браузера.
+ по истечении времени будет выводиться alert с текстом BOOOM.
+ После "взрыва" счетчик должен остановиться.
+ */
+
+(function () {
+    var TIME_OF_DEATH = 0,
+        startTime,
+        i = 1;
+
+    for (startTime = 10; startTime >= TIME_OF_DEATH; startTime--) {
+        (function () {
+            var time = startTime;
+
+            setTimeout(function () {
+                console.clear();
+                console.log('you will die in ' + time + ' sec...');
+            }, 1000 * i);
+            i++;
+
+            if (startTime === TIME_OF_DEATH) {
+                setTimeout(function () {
+                    alert('BOOOM!!!');
+                    console.clear();
+                    console.log('%c' + 'You are already DEAD!!!',
+                        'background-color: black;' +
+                        'border-radius: 5px;' +
+                        'color: red; padding: 5px;' +
+                        'font-size: 18px');
+                }, 1000 * i);
+            }
+        })(startTime);
     }
-  }
+})();
 
-  console.table(arr);
+/* ДЗ3
 
-  switch (reverse) {
-    case 'reverse':
-      result = result.concat( left, bottom, right.reverse(), top.reverse() );
-      console.log('top = ' + top);
-      console.log('left = ' + left);
-      console.log('bottom = ' + bottom);
-      console.log('right = ' + right);
-      break;
+        for (var i = 1; i <= 10; i++) {
+            setTimeout(function() {
+                console.log(i);
+            }, 1000 * i);
+        }
 
-    case 'clockwise':
-      result = result.concat( top, right, bottom.reverse(), left.reverse() );
-      console.log('top = ' + top);
-      console.log('right = ' + right);
-      console.log('bottom = ' + bottom);
-      console.log('left = ' + left);
-      break;
-
-    case 'triangle':
-      result = result.concat( top, right, diagonal.reverse() );
-      console.log('top = ' + top);
-      console.log('right = ' + right);
-      console.log('diagonal = ' + diagonal);
-      break;
-
-    case 'triangle-reverse':
-      result = result.concat( bottom, diagonal.reverse(), left );
-      console.log('bottom = ' + bottom);
-      console.log('diagonal = ' + diagonal);
-      console.log('left = ' + left);
-      break;
-
-    default:
-      createSpiral(arr);
-  }
-
-  console.log(result);
-}
-
-var result = [];
-
-function createSpiral(arr, count) {
-  var newArr = arr.slice(),
-      len = newArr.length,
-      LAST_ELEMENT = len - 1,
-      FIRST_ELEMENT = 0,
-      bottom = [],
-      right = [],
-      left = [],
-      top = [],
-      i;
-
-  var n = len / 2,
-      count = 0;
-
-  if (count < n) {
-    for (i = 0; i < len; i++) {
-      if (i === FIRST_ELEMENT) {
-        top = newArr[i].slice();
-      } else if (i > FIRST_ELEMENT && i < LAST_ELEMENT) {
-        left.push( newArr[i].shift() );
-        right.push( newArr[i].pop() );
-      } else {
-        newArr.shift();
-        bottom = newArr.pop();
-      }
+ исправить существующий код таким образом, чтобы
+ console.log выводила корректное значение переменной i
+ */
+(function() {
+    for (var i = 1; i <= 10; i++) {
+        (function () {
+            var count = i;
+            setTimeout(function () {
+                console.log(count);
+            }, i * 1000);
+        })(i);
     }
-
-    result = result.concat(top, right, bottom.reverse(), left.reverse() );
-
-    return createSpiral(newArr, count++);
-
-  } else {
-    return result;
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+})();
 
