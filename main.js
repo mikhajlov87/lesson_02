@@ -55,7 +55,7 @@ function createArrRandNum() {
       num,
       i;
 
-  for (i=0; i<len; i++){
+  for (i = 0; i < len; i++){
     num = createRandomNumber(0, 100);
     arr.splice(i, 1, num);
   }
@@ -81,7 +81,7 @@ function findIndex(arr, num) {
       len = arr.length,
       i;
 
-  for (i=0; i<len; i++) {
+  for (i = 0; i < len; i++) {
     if (num === arr[i]) {
       index = i;
       break;
