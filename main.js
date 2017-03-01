@@ -1,92 +1,255 @@
-    //Задача I:
+/**
+ *@author Sergei Mikhailov
+ */
 
-/*
-    2) есть 2 перменные;
-    var a = 10;
-    var b = 20;
-    поменять значения переменных местами;
-    с использованием третьей переменной (и без :) - опционально)
-*/
-
-    //Решение 1:
-function reverseVariables() {
-  // без использования третей переменной
-  var a = 10,
-      b = 20;
-
-  a = [a, b];
-  b = a[0];
-  a = a[1];
-  console.log(a, b);
-}
-
-    //Решение 2:
-function reverseWithAnotherVar() {
-  // с использованием третьей переменной
-  var a1 = 10,
-      b1 = 20,
-      c;
-
-  c = 10;
-  a1 = b1;
-  b1 = c;
-  c = null;
-  console.log(a1, b1);
-}
-
-//    Задача II
-
-/*
-    Создать массив на 30 элементов,
-    все элементы которого будут являться
-    случайными числами в диапазоне от 0 до 100;
-*/
-
-//    Решение:
-function createRandomNumber(min, max) {
-  var random = min - 0.5 + Math.random() * (max - min + 1);
-  random =  Math.round(random);
-  return random;
-}
-
-function createArrRandNum() {
-  var arr = new Array(30),
-      len = arr.length,
-      num,
-      i;
-
-  for (i = 0; i < len; i++){
-    num = createRandomNumber(0, 100);
-    arr.splice(i, 1, num);
-  }
-
-  return arr;
-}
-
-// Задача III
-
-/*
-    Насписать скрипт, повторяющий принцип работы метода indexOf
-    (в массиве из дз3 ищем, например, число 77, если находим,
-    выводится его индекс. если не находим - выводится -1)
-    var index = -1;
-    ищем по массиву, если находим, то перезаписываем переменную index
-    остaнавливаем цикл
-    выводим значение переменной index
-*/
-
-// Решение:
-function findIndex(arr, num) {
-  var index = -1,
-      len = arr.length,
-      i;
-
-  for (i = 0; i < len; i++) {
-    if (num === arr[i]) {
-      index = i;
-      break;
+/**
+ * @return {number} the sum of a numbers coming before n
+ */
+function sumTo(n) {
+    if (n !=0) {
+        return n + sumTo(n - 1);
+    } else {
+        return n;
     }
-  }
-
-  console.log(index);
 }
+
+/**
+ * @return {number} factorial of a number
+ */
+function factorial(n) {
+    if (n != 1) {
+        return n * factorial(n - 1);
+    } else {
+        return n;
+    }
+}
+
+/**
+ * @return {number} value of serial number from Fibonacci sequence
+ */
+function fib(n) {
+    var arr = [1, 1, 2],
+        inner,
+        i;
+
+    for (i = arr.length; i <= n; i++) {
+        inner = arr[i - 1] + arr[i - 2];
+        arr.push(inner);
+    }
+    return arr[n - 1];
+}
+
+
+/* 10* */
+var scheme1 = {
+        name: 'gate',
+        type: 'XOR',
+        children: [
+            {
+                name: 'gate',
+                type: 'AND',
+                children: [
+                    {
+                        name: 'switch',
+                        type: 'ON',
+                        state: 1
+                    },
+                    {
+                        name: 'switch',
+                        type: 'OFF',
+                        state: 0
+                    }
+                ]
+            }, {
+                name: 'gate',
+                type: 'NOT',
+                children: [
+                    {
+                        name: 'switch',
+                        type: 'ON',
+                        state: 1
+                    }
+                ]
+            }
+        ]
+    },
+
+    scheme2 = {
+        name: 'gate',
+        type: 'AND',
+        children: [
+            {
+                name: 'gate',
+                type: 'OR',
+                children: [
+                    {
+                        name: 'switch',
+                        type: 'ON',
+                        state: 1
+                    },
+                    {
+                        name: 'gate',
+                        type: 'XOR',
+                        children: [
+                            {
+                                name: 'switch',
+                                type: 'OFF',
+                                state: 0
+                            },
+                            {
+                                name: 'gate',
+                                type: 'NOT',
+                                children: [
+                                    {
+                                        name: 'switch',
+                                        type: 'ON',
+                                        state: 1
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }, {
+                name: 'gate',
+                type: 'NOT',
+                children: [
+                    {
+                        name: 'switch',
+                        type: 'ON',
+                        state: 1
+                    }
+                ]
+            }
+        ]
+    },
+
+    scheme3 = {
+        name: 'gate',
+        type: 'XOR',
+
+        children: [
+            {
+                name: 'gate',
+                type: 'NOT',
+                children: [
+                    {
+                        name: 'switch',
+                        type: 'OFF',
+                        state: 0
+                    }
+                ]
+            }, {
+                name: 'gate',
+                type: 'OR',
+                children: [
+                    {
+                        name: 'gate',
+                        type: 'OR',
+                        children: [
+                            {
+                                name: 'switch',
+                                type: 'OFF',
+                                state: 0
+                            },
+                            {
+                                name: 'gate',
+                                type: 'AND',
+                                children: [
+                                    {
+                                        name: 'switch',
+                                        type: 'OFF',
+                                        state: 0
+                                    },
+                                    {
+                                        name: 'switch',
+                                        type: 'ON',
+                                        state: 1
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        name: 'switch',
+                        type: 'OFF',
+                        state: 0
+                    }
+                ]
+            }
+        ]
+    };
+
+    var determine = {
+        actions: {
+            /**
+             * @return {boolean}
+             */
+            AND: function (a, b) {
+                return !!(a && b);
+            }
+        ,
+            /**
+             * @return {boolean}
+             */
+            OR: function (a, b) {
+                return !!(a || b);
+            }
+        ,
+            /**
+             * @return {boolean}
+             */
+            XOR: function (a, b) {
+                return !!(a ^ b);
+            }
+        ,
+            /**
+             * @return {boolean}
+             */
+            NOT: function (a) {
+                return !a;
+            }
+        },
+
+        getType: function (obj) {
+            return obj.type;
+        },
+
+        determineGates: function (obj) {
+            if( obj.hasOwnProperty('children') ) {
+                var first = 0,
+                    last = obj.children.length - 1;
+
+                var obj1 = obj.children[first],
+                    obj2 = obj.children[last];
+            }
+            var type = this.getType(obj);
+
+            var a = this.immersion(obj1);
+            var b = this.immersion(obj2);
+
+            return this.actions[type](a, b);
+        },
+
+        immersion: function (obj) {
+            for (var key in obj) {
+                if ( obj.hasOwnProperty(key) && obj[key] === 'gate' ) {
+                    return this.determineGates(obj);
+                } else if ( obj.hasOwnProperty(key) && obj[key] === 'switch' ) {
+                    return !!obj.state;
+                }
+            }
+        },
+
+        action: function (obj) {
+            for (var key in obj) {
+                if (obj.hasOwnProperty(key) && key === 'name') {
+                    if (obj.name === 'gate') {
+                        return this.determineGates(obj);
+                    } else if (obj.name === 'switch') {
+                        return !!this.state;
+                    }
+                }
+            }
+        }
+    };
