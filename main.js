@@ -1,255 +1,48 @@
-/**
- *@author Sergei Mikhailov
- */
+'use strict';
 
-/**
- * @return {number} the sum of a numbers coming before n
- */
-function sumTo(n) {
-    if (n !=0) {
-        return n + sumTo(n - 1);
-    } else {
-        return n;
-    }
+function Horse(name) {
+    this.name = name;
+    this.mileage = 0;
+    this.tiredCount = 0;
 }
 
-/**
- * @return {number} factorial of a number
- */
-function factorial(n) {
-    if (n != 1) {
-        return n * factorial(n - 1);
-    } else {
-        return n;
-    }
-}
+Horse.prototype._totalMileage = 0;
 
-/**
- * @return {number} value of serial number from Fibonacci sequence
- */
-function fib(n) {
-    var arr = [1, 1, 2],
-        inner,
-        i;
+Horse.prototype._maxTiredCount = 10;
 
-    for (i = arr.length; i <= n; i++) {
-        inner = arr[i - 1] + arr[i - 2];
-        arr.push(inner);
-    }
-    return arr[n - 1];
-}
+Horse.prototype._timeToRest = 5;
 
+Horse.prototype.run = function (distance) {//debugger;
+    var MAX_TIRED_COUNT = this._maxTiredCount;
+    var mileage = distance;
+    var tired = this.tiredCount;
+    var differ = 0;
 
-/* 10* */
-var scheme1 = {
-        name: 'gate',
-        type: 'XOR',
-        children: [
-            {
-                name: 'gate',
-                type: 'AND',
-                children: [
-                    {
-                        name: 'switch',
-                        type: 'ON',
-                        state: 1
-                    },
-                    {
-                        name: 'switch',
-                        type: 'OFF',
-                        state: 0
-                    }
-                ]
-            }, {
-                name: 'gate',
-                type: 'NOT',
-                children: [
-                    {
-                        name: 'switch',
-                        type: 'ON',
-                        state: 1
-                    }
-                ]
-            }
-        ]
-    },
-
-    scheme2 = {
-        name: 'gate',
-        type: 'AND',
-        children: [
-            {
-                name: 'gate',
-                type: 'OR',
-                children: [
-                    {
-                        name: 'switch',
-                        type: 'ON',
-                        state: 1
-                    },
-                    {
-                        name: 'gate',
-                        type: 'XOR',
-                        children: [
-                            {
-                                name: 'switch',
-                                type: 'OFF',
-                                state: 0
-                            },
-                            {
-                                name: 'gate',
-                                type: 'NOT',
-                                children: [
-                                    {
-                                        name: 'switch',
-                                        type: 'ON',
-                                        state: 1
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            }, {
-                name: 'gate',
-                type: 'NOT',
-                children: [
-                    {
-                        name: 'switch',
-                        type: 'ON',
-                        state: 1
-                    }
-                ]
-            }
-        ]
-    },
-
-    scheme3 = {
-        name: 'gate',
-        type: 'XOR',
-
-        children: [
-            {
-                name: 'gate',
-                type: 'NOT',
-                children: [
-                    {
-                        name: 'switch',
-                        type: 'OFF',
-                        state: 0
-                    }
-                ]
-            }, {
-                name: 'gate',
-                type: 'OR',
-                children: [
-                    {
-                        name: 'gate',
-                        type: 'OR',
-                        children: [
-                            {
-                                name: 'switch',
-                                type: 'OFF',
-                                state: 0
-                            },
-                            {
-                                name: 'gate',
-                                type: 'AND',
-                                children: [
-                                    {
-                                        name: 'switch',
-                                        type: 'OFF',
-                                        state: 0
-                                    },
-                                    {
-                                        name: 'switch',
-                                        type: 'ON',
-                                        state: 1
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        name: 'switch',
-                        type: 'OFF',
-                        state: 0
-                    }
-                ]
-            }
-        ]
-    };
-
-    var determine = {
-        actions: {
-            /**
-             * @return {boolean}
-             */
-            AND: function (a, b) {
-                return !!(a && b);
-            }
-        ,
-            /**
-             * @return {boolean}
-             */
-            OR: function (a, b) {
-                return !!(a || b);
-            }
-        ,
-            /**
-             * @return {boolean}
-             */
-            XOR: function (a, b) {
-                return !!(a ^ b);
-            }
-        ,
-            /**
-             * @return {boolean}
-             */
-            NOT: function (a) {
-                return !a;
-            }
-        },
-
-        getType: function (obj) {
-            return obj.type;
-        },
-
-        determineGates: function (obj) {
-            if( obj.hasOwnProperty('children') ) {
-                var first = 0,
-                    last = obj.children.length - 1;
-
-                var obj1 = obj.children[first],
-                    obj2 = obj.children[last];
-            }
-            var type = this.getType(obj);
-
-            var a = this.immersion(obj1);
-            var b = this.immersion(obj2);
-
-            return this.actions[type](a, b);
-        },
-
-        immersion: function (obj) {
-            for (var key in obj) {
-                if ( obj.hasOwnProperty(key) && obj[key] === 'gate' ) {
-                    return this.determineGates(obj);
-                } else if ( obj.hasOwnProperty(key) && obj[key] === 'switch' ) {
-                    return !!obj.state;
-                }
-            }
-        },
-
-        action: function (obj) {
-            for (var key in obj) {
-                if (obj.hasOwnProperty(key) && key === 'name') {
-                    if (obj.name === 'gate') {
-                        return this.determineGates(obj);
-                    } else if (obj.name === 'switch') {
-                        return !!this.state;
-                    }
-                }
-            }
+    if (mileage) {
+        differ = MAX_TIRED_COUNT - tired;
+        if ( !this.isTired(mileage) ) {
+            differ = mileage;
         }
-    };
+        this.mileage += differ;
+        this.constructor.prototype._totalMileage += differ;
+        this.tiredCount += differ;
+        mileage -= differ;
+    }
+
+    if (this.tiredCount === MAX_TIRED_COUNT) {
+        this.takeRest(mileage);
+    }
+};
+
+Horse.prototype.isTired = function (distance) {
+    return (this.tiredCount + distance > this._maxTiredCount);
+};
+
+Horse.prototype.getTotalMileage = function () {
+    return this._totalMileage;
+};
+
+Horse.prototype.takeRest = function (mileage) {
+    this.tiredCount = 0;
+    setTimeout(this.run(mileage), this._timeToRest);
+};
