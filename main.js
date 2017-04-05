@@ -1,48 +1,64 @@
-'use strict';
+(function () {
+    'use strict';
+    function createChessboard() {
+        const ZERO = 0;
+        let body = document.body,
+            script = body.querySelector('script'),
+            table = createElem('table'),
+            tHead = createElem('thead'),
+            tBody = createElem('tbody'),
+            tableSellCount = 9,
+            thCaption = ['', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', ''],
+            tr, td, th, i, j;
 
-function Horse(name) {
-    this.name = name;
-    this.mileage = 0;
-    this.tiredCount = 0;
-}
+        for (i = tableSellCount; i >= ZERO; i--) {
+            tr = createElem('tr');
+            for (j = ZERO; j <= tableSellCount; j++) {
+                switch (true) {
+                    case (i === tableSellCount):
+                        th = createElem('th');
+                        th.textContent = thCaption[j];
+                        tr.appendChild(th);
+                        tHead.appendChild(tr);
+                        break;
 
-Horse.prototype._totalMileage = 0;
+                    case (i > ZERO && i < tableSellCount):
+                        if (!j || j === tableSellCount) {
+                            th = createElem('th');
+                            th.textContent = i;
+                            tr.appendChild(th);
+                        } else {
+                            td = createElem('td');
+                            td.className = 'white';
+                            if ( !(i % 2) && !(j % 2) ) {
+                                td.className = 'black';
+                            }
+                            if ( (i % 2) && (j % 2) ) {
+                                td.className = 'black';
+                            }
+                            tr.appendChild(td);
+                        }
+                        tBody.appendChild(tr);
+                        break;
 
-Horse.prototype._maxTiredCount = 10;
-
-Horse.prototype._timeToRest = 5;
-
-Horse.prototype.run = function (distance) {//debugger;
-    var MAX_TIRED_COUNT = this._maxTiredCount;
-    var mileage = distance;
-    var tired = this.tiredCount;
-    var differ = 0;
-
-    if (mileage) {
-        differ = MAX_TIRED_COUNT - tired;
-        if ( !this.isTired(mileage) ) {
-            differ = mileage;
+                    case (i === ZERO):
+                        th = createElem('th');
+                        th.textContent = thCaption[j];
+                        tr.appendChild(th);
+                        tBody.appendChild(tr);
+                        break;
+                }
+            }
         }
-        this.mileage += differ;
-        this.constructor.prototype._totalMileage += differ;
-        this.tiredCount += differ;
-        mileage -= differ;
+
+        table.appendChild(tHead);
+        table.appendChild(tBody);
+        body.insertBefore(table, script);
     }
 
-    if (this.tiredCount === MAX_TIRED_COUNT) {
-        this.takeRest(mileage);
+    function createElem(tagName) {
+        return document.createElement(tagName);
     }
-};
 
-Horse.prototype.isTired = function (distance) {
-    return (this.tiredCount + distance > this._maxTiredCount);
-};
-
-Horse.prototype.getTotalMileage = function () {
-    return this._totalMileage;
-};
-
-Horse.prototype.takeRest = function (mileage) {
-    this.tiredCount = 0;
-    setTimeout(this.run(mileage), this._timeToRest);
-};
+    createChessboard();
+})();
