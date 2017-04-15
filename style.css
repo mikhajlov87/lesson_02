@@ -1,22 +1,45 @@
-table {
-    border: 2px solid #ccc;
-    border-collapse: collapse;
-    margin: 0 auto;
+html,
+body {
+    height: 100%;
 }
-th, td {
-    box-sizing: border-box;
-    height: 30px;
-    width: 30px;
+button {
+    cursor: pointer;
+    padding: 10px 15px;
+    border-radius: 4px;
+    text-transform: capitalize;
+    color: #fff;
+    text-shadow: 1px 1px #000;
+    font-size: 1.2em;
+    width: 200px;
 }
-th {
+ul {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    border: 1px solid #000;
+    border-radius: 4px;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    list-style: none;
+    width: 200px;
+}
+li {
+    text-transform: capitalize;
+    padding: 5px 10px;
+    letter-spacing: 0.1em;
+    color: #999;
+    cursor: pointer;
     border: 1px solid #ccc;
 }
-td {
-    border: 2px solid #000;
+li:hover {
+    border-top-color: #000;
+    border-bottom-color: #000;
+    color: #000;
 }
-.black {
-    background: #000;
+.hide {
+    display: none;
 }
-.white {
-    background: #fff;
+.show {
+    display: block;
 }
